@@ -1,5 +1,4 @@
 import './App.css';
-import Loader from './Loader';
 import Table from './Table';
 import Details from './Details';
 
