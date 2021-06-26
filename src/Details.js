@@ -4,13 +4,14 @@ import { connect } from "react-redux";
 class Details extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {isActive: false};
   }
   render() {
     let key = this.props.table.selectedId;
     let details =
       this.props.table.data &&
       this.props.table.data.filter(({ id }) => id === key);
+    let value = details && details.length && details[0].description;
     return (
       <div id="info-wrapper">
         <h1>Details</h1>
@@ -23,8 +24,7 @@ class Details extends Component {
           </div>
           <div>
             <b>Description: </b>
-            <textarea cols="50" rows="5" readOnly>
-              {details && details.length && details[0].description}
+            <textarea cols="50" rows="5" value ={value} readOnly>
             </textarea>
           </div>
           <div>

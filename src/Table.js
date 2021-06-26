@@ -2,17 +2,18 @@ import React, { Component } from "react";
 import search from "./search-icon.svg";
 import { connect } from "react-redux";
 import { getTable } from "./redux/actions";
+import preloader from "./preloader.gif";
 class Table extends Component {
   constructor(props) {
     super(props);
-    this.state = { search: "", data: [], selectedId: 0 };
+    this.state = { search: "", data: [], selectedId: 0 ,activeIndex:0, loader: true};
   }
   componentDidMount() {
     fetch(
-      "http://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D"
+      "https://www.filltext.com/?rows=32&id=%7Bnumber%7C1000%7D&firstName=%7BfirstName%7D&lastName=%7BlastName%7D&email=%7Bemail%7D&phone=%7Bphone%7C(xxx)xxx-xx-xx%7D&address=%7BaddressObject%7D&description=%7Blorem%7C32%7D"
     )
       .then((res) => res.json())
-      .then((res) => this.setState({ data: res }));
+      .then((res) => this.setState({ data: res,loader: false }));
   }
   searchFilter = (search) => {
     return (
@@ -35,6 +36,10 @@ class Table extends Component {
   render() {
     let filterData = this.searchFilter(this.state.search);
     return (
+        <>
+        <div id="overlay" className ={this.state.loader ? "overlay-shown" : "overlay-hidden"}>
+        <img src={preloader} alt="Preloader icon" />
+      </div>
       <div id="table-section">
         <form action="/">
           <img src={search} alt="Search Icon" />
@@ -73,14 +78,14 @@ class Table extends Component {
                     ({ id, firstName, lastName, email, phone }) => {
                       return (
                         <tr
-                          className="data-row"
+                        className={this.state.selectedId === id ? "data-row data-row-open" : "data-row data-row-close"}
                           key={id}
                           onClick={(e) => {
                             this.setState({ selectedId: id }, () =>
                               this.props.sendTable(this.state)
                             );
+                            console.log(e);
                           }}
-                          onClick = {this.cl}
                         >
                           <td className="column1">{id}</td>
                           <td className="column2">{firstName}</td>
@@ -96,6 +101,7 @@ class Table extends Component {
           </div>
         </div>
       </div>
+      </>
     );
   }
 }
